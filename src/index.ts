@@ -1,25 +1,31 @@
-import { PluginFunc } from 'dayjs'
+import { PluginFunc, Dayjs } from 'dayjs'
 
 /* Eg. 
 ２０２４年
 RRRR　→　令和６年 
 RR　→　令和
-rrrr →　R06 
+rrrr →　R6 
 rr →　R 
  */
 type FormatStr = 'RRRR' | 'RR' | 'rrrr' | 'rr' | string
 
-const format = (str: string) => {
+const format = (str: string, dayjs: Dayjs) => {
   str.replace(/\[([^\]]+)]|r+|/g, (match) => {
+    const date = dayjs.toDate()
+    const ret = Intl.DateTimeFormat('ja-JP-u-ca-japanese', {
+      year: '2-digit',
+      era: 'long'
+    }).format(date)
+    const digitRet = Intl.DateTimeFormat('ja-JP-u-ca-japanese').format(date)
     switch (match) {
       case 'RRRR':
-        return ''
+        return ret
       case 'RR':
-        return ''
+        return ret.slice(0, 2)
       case 'rrrr':
-        return ''
+        return digitRet.slice(0, 2)
       case 'rr':
-        return ''
+        return digitRet.slice(0, 1)
       default:
         return match
     }
@@ -28,9 +34,9 @@ const format = (str: string) => {
 
 export const jpCalendar: PluginFunc = (_option, dayjsClass, _dayjsFactory) => {
   const oldFormat = dayjsClass.prototype.format
-
-  dayjsClass.prototype.format = (template) => {
-    const ret = template ? format(template) : template
+  const proto = dayjsClass.prototype
+  proto.format = (template) => {
+    const ret = template ? format(template, proto) : template
     return oldFormat.bind(this)(ret)
   }
 }
