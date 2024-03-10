@@ -10,7 +10,7 @@ rr →　R
 type FormatStr = 'RRRR' | 'RR' | 'rrrr' | 'rr' | string
 
 const format = (str: string, dayjs: Dayjs) => {
-  str.replace(/\[([^\]]+)]|r+|/g, (match) => {
+  return str.replace(/\[([^\]]+)]|r+|/g, (match) => {
     const date = dayjs.toDate()
     const ret = Intl.DateTimeFormat('ja-JP-u-ca-japanese', {
       year: '2-digit',
