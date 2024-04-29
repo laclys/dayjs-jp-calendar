@@ -31,9 +31,6 @@ export const jpCalendar: PluginFunc = function (_o, c) {
 
   proto.format = function (formatStr: FormatStr) {
     const result = formatStr.replace(/\[([^\]]+)]|r+|/g, (match) => {
-      console.log('type', typeof this)
-      const date = this.toDate()
-      const digitRet = Intl.DateTimeFormat('ja-JP-u-ca-japanese').format(date)
       switch (match) {
         case 'rrrr':
           return kanji(this, false)
