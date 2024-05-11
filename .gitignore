@@ -3,3 +3,6 @@ dist
 
 # misc
 .DS_Store
+
+# test
+coverage
