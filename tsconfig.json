@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "esModuleInterop": true,
     "declaration": true,
     "declarationDir": "./dist",
     "module": "commonjs",
@@ -14,8 +15,5 @@
     "out": "docs"
   },
   "include": ["src/**/*"],
-  "exclude": [
-    "node_modules",
-    "dist",
-  ]
+  "exclude": ["node_modules", "dist"]
 }

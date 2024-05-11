@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
-  entryPoints: ['src/'],
+  entryPoints: ['src/index.ts'],
   bundle: true,
   splitting: true,
   outDir: 'dist',
