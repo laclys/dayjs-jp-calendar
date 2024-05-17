@@ -1,6 +1,8 @@
 ## dayjs-jp-calendar
 
+![](https://img.shields.io/npm/v/dayjs-jp-calendar.svg?style=flat)
 [![](https://img.shields.io/npm/dm/dayjs-jp-calendar)](https://www.npmjs.com/package/dayjs-jp-calendar)
+![GitHub](https://img.shields.io/github/license/laclys/dayjs-jp-calendar)
 
 > Jpanese Calendar Plugin for Day.js
 
