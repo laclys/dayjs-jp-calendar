@@ -1,35 +1,37 @@
 import { PluginFunc, Dayjs } from 'dayjs'
 
-type FormatStr = 'RRRR' | 'RRR' | 'RR' | 'R' | string
+type FormatStr = 'RRRR' | 'RRR' | 'RR' | 'R' | 'rr' | 'r' | string
+
+const MIN_YEAR = 1868
 
 /* 
- isShort: true  -> 令和
- isShort: false  -> 令和X
+ onlyGengo: true  -> 令和
+ onlyGengo: false  -> 令和X
 */
-const kanji = (date: Dayjs, isShort: boolean) => {
+const kanji = (date: Dayjs, onlyGengo: boolean) => {
   try {
-    const targetDay = date.toDate()
+    if (date.get('year') < MIN_YEAR) return '-'
     const ret = Intl.DateTimeFormat('ja-JP-u-ca-japanese', {
       year: '2-digit',
       era: 'long'
-    }).format(targetDay)
-    return !isShort ? ret.slice(0, -1) : ret.slice(0, 2)
+    }).format(date.toDate())
+    return !onlyGengo ? ret.slice(0, -1) : ret.slice(0, 2)
   } catch {
     return 'unknown'
   }
 }
 
 /* 
- isShort: true  -> R
- isShort: false  -> RX
+ onlyGengo: true  -> R
+ onlyGengo: false  -> RX
 */
-const code = (date: Dayjs, isShort: boolean) => {
+const code = (date: Dayjs, onlyGengo: boolean) => {
   try {
-    const targetDay = date.toDate()
+    if (date.get('year') < MIN_YEAR) return '-'
     const ret = Intl.DateTimeFormat('ja-JP-u-ca-japanese', {
       era: 'short'
     })
-      .format(targetDay)
+      .format(date.toDate())
       .replace(/明治|大正|昭和|平成|令和/g, (match) => {
         switch (match) {
           case '明治':
@@ -46,7 +48,36 @@ const code = (date: Dayjs, isShort: boolean) => {
             return match
         }
       })
-    return !isShort ? ret.split('/')[0] : ret.slice(0, 1)
+    return !onlyGengo ? ret.split('/')[0] : ret.slice(0, 1)
+  } catch {
+    return 'unknown'
+  }
+}
+
+const symbol = (date: Dayjs, onlyGengo: boolean) => {
+  try {
+    if (date.get('year') < MIN_YEAR) return '-'
+    const ret = Intl.DateTimeFormat('ja-JP-u-ca-japanese', {
+      era: 'short'
+    })
+      .format(date.toDate())
+      .replace(/明治|大正|昭和|平成|令和/g, (match) => {
+        switch (match) {
+          case '明治':
+            return '㍾'
+          case '大正':
+            return '㍽'
+          case '昭和':
+            return '㍼'
+          case '平成':
+            return '㍻'
+          case '令和':
+            return '㋿'
+          default:
+            return match
+        }
+      })
+    return !onlyGengo ? ret.split('/')[0] : ret.slice(0, 1)
   } catch {
     return 'unknown'
   }
@@ -57,21 +88,27 @@ export const jpCalendar: PluginFunc = function (_o, c) {
   const oldFormat = proto.format
 
   proto.format = function (formatStr: FormatStr) {
-    const result = formatStr.replace(/(\[[^\]]+])|RRRR|RRR|RR|R/g, (match) => {
-      switch (match) {
-        case 'RRRR':
-          return kanji(this, false)
-        case 'RRR':
-          return kanji(this, true)
-        case 'RR':
-          return code(this, false)
-        case 'R':
-          return code(this, true)
-        default:
-          console.log('match', match)
-          return match
+    const result = formatStr.replace(
+      /(\[[^\]]+])|RRRR|RRR|RR|R|rr|r/g,
+      (match) => {
+        switch (match) {
+          case 'RRRR':
+            return kanji(this, false)
+          case 'RRR':
+            return kanji(this, true)
+          case 'RR':
+            return code(this, false)
+          case 'R':
+            return code(this, true)
+          case 'rr':
+            return symbol(this, false)
+          case 'r':
+            return symbol(this, true)
+          default:
+            return match
+        }
       }
-    })
+    )
     /* This code handles the predefined "H" and "M" fields within Day.js */
     return oldFormat.bind(this)(result).replace(/Ｈ/g, 'H').replace(/Ｍ/g, 'M')
   }
