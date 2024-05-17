@@ -30,29 +30,37 @@ dayjs(date).format('RRR') // --> 令和
 dayjs(date).format('RR') // --> R5
 dayjs(date).format('R') // --> R
 
+dayjs(date).format('rr') // --> ㋿5
+dayjs(date).format('r') // --> ㋿
+
 dayjs(date).format('YYYY(RR)/MM/DD') // --> 2023(R5)/11/13
+dayjs(date).format('YYYY(rr)/MM/DD') // --> 2023(㋿5)/11/13
 ```
 
 ### Test Coverage
+
 ```
  % Coverage report from v8
-----------|---------|----------|---------|---------|----------------------
-File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s    
-----------|---------|----------|---------|---------|----------------------
-All files |   91.25 |     82.6 |     100 |   91.25 |                      
- index.ts |   91.25 |     82.6 |     100 |   91.25 | 18-19,46,51-52,71-72 
- ```
+----------|---------|----------|---------|---------|
+File      | % Stmts | % Branch | % Funcs | % Lines |
+----------|---------|----------|---------|---------|
+All files |    92.3 |    85.71 |     100 |    92.3 |
+ index.ts |    92.3 |    85.71 |     100 |    92.3 |
+----------|---------|----------|---------|---------|
+```
 
- ### For Dev
- ```bash
+### For Dev
+
+```bash
 #Install
 pnpm i
 #Test
 pnpm run test
 #Build
-pnpm run build  
- ```
+pnpm run build
+```
 
- ### Example case
- > with antd
- todo
+### Example case
+
+> with antd
+> todo
