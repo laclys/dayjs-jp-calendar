@@ -64,5 +64,4 @@ pnpm run build
 
 ### Example case
 
-> with antd
-> todo
+> [Link](https://github.com/laclys/dayjs-jp-calendar/tree/master/demo)
